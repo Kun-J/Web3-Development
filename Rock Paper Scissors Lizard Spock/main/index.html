@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link 
+        rel="icon" 
+        type="image/png" 
+        sizes="32x12" 
+        href="./images/favicon-32x12.png"
+    />
+    <title>Rock, Paper, Scissor, Lizard, Spock</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+   
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>
+                <span>Rock</span>
+                <span>Paper</span>
+                <span>Scissor</span>
+                <span>Lizard</span>
+                <span>Spock</span>
+            </h1>
+            <button class="btn-wallet" id="metamask">Connect MetaMask</button>
+            <div class="play">
+                <button class="btn-play" id="play">Play</button>
+                <button class="btn-create" id="create">Create Game</button>
+                <button class="btn-join" id="join">Join Game</button>
+            </div>
+            <div class="overlay" id="overlay" onclick="off()">
+                <div id="text">Choose your Move</div>
+            </div>
+            
+        </header>
+
+        <main id="main">
+            <button class="btn-icon btn-Rock pick" data-choice="Rock">
+                <span class="wrapper"><img src="./images/icon-rock.svg" alt="Rock icon"></button></span>
+            <button class="btn-icon btn-Paper pick" data-choice="Paper" >
+                <span class="wrapper"><img src="./images/icon-paper.svg" alt="Paper icon"></button></span>
+            <button class="btn-icon btn-Scissors pick" data-choice="Scissors">
+                <span class="wrapper"><img src="./images/icon-scissors.svg" alt="Scissors icon"></button></span>
+            <button class="btn-icon btn-Lizard pick" data-choice="Lizard">
+                <span class="wrapper"><img src="./images/icon-lizard.svg" alt="Lizard icon"></button></span>
+            <button class="btn-icon btn-Spock pick" data-choice="Spock">
+                <span class="wrapper"><img src="./images/icon-spock.svg" alt="Spock icon"></button></span>
+        </main>
+
+        <div class="rules-modal" id="modal" onclick="off()">
+                <img src="./images/image-rules-bonus.svg" alt="rules">
+                <button id="close"><img src="./images/icon-close.svg" alt="close"></button>
+        </div>
+        <button class="btn-rules" id="open">Rules</button>
+        <div class="instruct-modal" id="instruct-modal">
+            <h2>
+                1.  The first player creates the game, puts a commitment of his move, selects the other player and stakes some ETH. <br>
+                2.  The second player pays the same amount of ETH and chooses his move. <br>
+                3.  The first player reveals his move by providing the secret key he used in Step 1 and the contract distributes the ETH to the winner or splits them in case of a tie. <br>
+                4.  If a player stops responding there are timeouts. <br>
+
+                NOTE: Please remember to select Goerli Test Network on Metamask.
+            </h2>
+            <button id="instruct-close"><img src="./images/icon-close.svg" alt="close"></button>
+        </div>
+        <button class="btn-instruct" id="instruct-open">Instructions</button>
+    </div>
+    <div class="selection" id="selection">
+        <div>
+            <h2>
+                You Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p1_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+        <div class="overlay" id="overlay2">
+            <div id="text">Waiting for Transaction confirmation</div>
+        </div>
+        <div id="waiting">
+            <p id="timer"></p>
+            <p id="wait">Waiting for Opponent's move</p><br>
+            <button class="btn-timeout" id="btn-timeout">Call Timeout</button>
+        </div>
+        <div class="inputs" id="inputs">
+            <form id="form">
+                <label for="amount"> Stake Amount (In GoerliETH)</label><br>
+                <input type="number" id="amount" name="amount" size="43"><br>
+                <label for="secret">Secret Key</label><br>
+                <input type="number" id="secret" name="secret"><br>
+                <label for="opponent"> Opponent's Address</label><br>
+                <input type="text" id="opponent" name="opponent" size="43"><br>
+            </form>
+            <button class="btn-reset" id="reset">Reset Choice</button>
+            <button class="btn-submit" id="submit">Submit</button>
+        </div>
+    </div>
+    <div class="selection" id="selection2">
+        <div>
+            <h2>
+                You Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p2_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+        <div class="inputs" id="noInputs">
+            <form id="form2">
+                <label for="amount2">Stake Amount (In GoerliETH)</label><br>
+                <input type="number" id="amount2" name="amount2" size="43" disabled value=""><br>
+            </form>
+            <button class="btn-reset" id="reset2">Reset Choice</button>
+            <button class="btn-submit" id="submit2">Submit</button>
+
+        </div>
+        <div id="waiting2">
+            <p id="timer2"></p>
+            <p id="wait2">Waiting for Opponent to Show his move</p><br>
+            <button class="btn-timeout" id="btn-timeout2">Call Timeout</button>
+        </div>
+    </div>
+    <div class="selection" id="selection3">
+        <div id="move">
+            <h2>
+                You Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p1_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+        <div class="inputs" id="secretInput">
+            <form id="form3">
+                <label for="key2">Secret Key</label><br>
+                <input type="text" id="key2" name="key2" size="43"><br>
+            </form>
+            <button class="btn-submit" id="reveal">Reveal Move</button>
+        </div>
+    </div>
+    <div class="selection" id="result">
+        <div>
+            <h2>
+                You Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p1_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+        <div>
+            Result
+            <button>Home</button>
+        </div>
+        <div>
+            <h2>
+                Opponent Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p2_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="selection" id="result2">
+        <div>
+            <h2>
+                You Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p2_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+        <div>
+            Result
+            <button class="home">Home</button>
+        </div>
+        <div>
+            <h2>
+                Opponent Picked
+            </h2>
+            <button class="btn-icon btn-rock" id="p1_select">
+                <span class="wrapper">
+                    <img src="./images/icon-rock.svg" alt="Rock icon">
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="b2home" id="b2home">
+        <div>
+            <h2>Timeout Call successful</h2>
+            <h2>Funds have been sent back to your wallet</h2>
+            <button class="home" id="home">Home</button>
+        </div>
+    </div>
+
+</body>
+</html>

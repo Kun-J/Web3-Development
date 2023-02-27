@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ethers": "^6.0.6",
+    "hardhat": "^2.12.7",
+    "metamask": "^0.0.1-security",
+    "require": "^2.4.20",
+    "web3": "^1.8.2"
+  }
+}
